@@ -13,7 +13,7 @@ jobs:
     name: Build tooling
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     container:
       image: "alpine:latest"
 
