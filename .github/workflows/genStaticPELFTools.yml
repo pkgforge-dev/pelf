@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         with:
           name: AppBundle
-          path: 'dist'
+          path: dist/*.AppBundle*
 
       - name: Upload version file
         uses: actions/upload-artifact@v4.6.0
@@ -97,6 +97,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/pelf-toolchain*.AppDir
+          asset_path: dist/*.AppBundle*
           asset_name: pelf-toolchain.AppDir
           asset_content_type: application/octet-stream
