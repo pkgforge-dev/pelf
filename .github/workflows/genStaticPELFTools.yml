@@ -25,6 +25,8 @@ jobs:
         run: |
           #apk del bash findutils gawk grep diffutils coreutils
           apk add git bash file binutils patchelf findutils grep sed coreutils strace
+          # Add good stuff
+          apk add go
 
       - name: Set up GOBIN and install lib4bin
         run: |
