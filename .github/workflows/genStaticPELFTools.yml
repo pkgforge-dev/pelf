@@ -1,0 +1,138 @@
+name: Build and Release PELF tooling as a single-file executable
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  schedule:
+    - cron: "0 14 * * 0"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build tooling
+    runs-on: ubuntu-latest
+    permissions: write-all
+    container:
+      image: "alpine:latest"
+      options: --privileged
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add non-compliant tools, because sucky software requires sucky software #- name: Remove non-compliant tools
+        run: |
+          #apk del bash findutils gawk grep diffutils coreutils
+          apk add bash file binutils patchelf findutils grep sed coreutils strace
+
+      - name: Set up GOBIN and install lib4bin
+        run: |
+          set -x
+          export GOBIN="$GITHUB_WORKSPACE/.local/bin" CGO_ENABLED=0 GO_LDFLAGS='-buildmode=static-pie' GOFLAGS='-ldflags=-static-pie -ldflags=-s -ldflags=-w'
+          export DBIN_INSTALL_DIR="$GOBIN"
+          mkdir -p "$GOBIN"
+          echo "DBIN_INSTALL_DIR=$DBIN_INSTALL_DIR" >> $GITHUB_ENV
+          echo "GOBIN=$GOBIN" >> $GITHUB_ENV
+          echo "PATH=$GOBIN:$PATH" >> $GITHUB_ENV
+          git clone --depth 1 --branch dev https://github.com/xplshn/pelf
+          cp ./pelf/pelf* "$GOBIN" || true
+          cd ./pelf/cmd/misc/appstream_helper
+          go install .
+          cd ../../../standaloneRuntimes/go
+          go build
+          strip ./appbundle-runtime
+          mv ./appbundle-runtime "$GOBIN"
+          cd
+          wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "/usr/local/bin/dbin" add sharun sharun-lib4bin squashfstools/mksquashfs squashfstools/unsquashfs squashfstools/sqfstar squashfstools/sqfscat squashfuse squashfuse_ll
+          mv "$DBIN_INSTALL_DIR/sharun-lib4bin" "$DBIN_INSTALL_DIR/lib4bin"
+          echo "WITH_SHARUN=1" >> $GITHUB_ENV
+          echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
+          echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
+          echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
+          echo "APPBUNDLE_FS=${{ github.event.inputs.appbundle_fs }}" >> $GITHUB_ENV
+
+      - name: Create AppDir
+        run: |
+          pelfCreator -m "pkgforge-dev/xplshn" -n "pelf-toolchain" -p "bash file binutils patchelf findutils grep sed coreutils strace" -x "usr/bin/strip usr/bin/strace usr/bin/grep usr/bin/sed usr/bin/find usr/bin/file usr/bin/objcopy usr/bin/bash usr/bin/diff usr/bin/patch usr/bin/patchelf" -j "sqfs" --custom-runtime="$GOBIN/appbundle-runtime" -z
+          APPDIR="$(echo "pelf-toolchain*.AppDir")"
+          cp "$DBIN_INSTALL_DIR/*" "$APPDIR/bin"
+          # Create the actual AppBundle:
+          "$APPDIR/.gen"
+
+      - name: Set version
+        run: |
+          echo "APP_VERSION=${{ env.APP_VERSION }}" >> "${GITHUB_ENV}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: AppBundle
+          path: 'dist'
+
+      - name: Upload version file
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: version
+          path: ~/version
+
+  release:
+    needs: [build]
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          name: AppBundle
+
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          name: version
+
+      - name: Read version
+        run: |
+          cat version
+          export VERSION="$(<version)"
+          echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
+
+      # Version Release
+      - name: Delete Previous Release
+        run: |
+          gh release delete "${APP_VERSION}" --repo "${GITHUB_REPOSITORY}" --cleanup-tag -y
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        continue-on-error: true
+
+      - name: Continuous Releaser
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "AppBundle ${{ env.APP_VERSION }}"
+          tag_name: "${{ env.APP_VERSION }}"
+          prerelease: false
+          draft: false
+          generate_release_notes: false
+          make_latest: true
+          files: |
+            *.AppBundle*
+        continue-on-error: false
+
+      # Snapshot Release
+      - name: Get Date
+        run: |
+          SNAPSHOT_TAG="$(date --utc +'%Y%m%d-%H%M%S')"
+          echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
+        continue-on-error: false
+
+      - name: Snapshot Releaser
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Snapshot ${{ env.APP_VERSION }}"
+          tag_name: "${{ env.SNAPSHOT_TAG }}"
+          prerelease: false
+          draft: false
+          generate_release_notes: false
+          make_latest: false
+          files: |
+            *.AppBundle*
+        continue-on-error: false
