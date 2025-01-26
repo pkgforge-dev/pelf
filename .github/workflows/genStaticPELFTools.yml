@@ -58,7 +58,24 @@ jobs:
         run: |
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
-          pelfCreator -m "pkgforge-dev/xplshn" -n "pelf-toolchain" -p "bash file binutils patchelf findutils grep sed coreutils strace" -x "usr/bin/strip usr/bin/strace usr/bin/grep usr/bin/sed usr/bin/find usr/bin/file usr/bin/objcopy usr/bin/bash usr/bin/diff usr/bin/patch usr/bin/patchelf" -e "pelf-dwfs" -j "sqfs" --custom-runtime="$GOBIN/appbundle-runtime" -z
+          APPBUNDLE_FS="sqfs"
+          pelfCreator -m "pkgforge-dev/xplshn" -n "pelf-toolchain" \
+            -p "bash file binutils patchelf findutils grep sed coreutils strace" \
+            -x "usr/bin/strip
+                usr/bin/strace
+                usr/bin/grep
+                usr/bin/sed
+                usr/bin/find
+                usr/bin/file
+                usr/bin/objcopy
+                usr/bin/bash
+                usr/bin/diff
+                usr/bin/patch
+                usr/bin/patchelf" \
+              -e "pelf-dwfs" \
+              -j "$APPBUNDLE_FS" --custom-runtime="$GOBIN/appbundle-runtime" \
+              -o "pelf-toolchain.$APPBUNDLE_FS.AppBundle"
+              -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
