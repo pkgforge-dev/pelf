@@ -91,12 +91,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v2.0.8
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/*.AppBundle*
-          asset_name: pelf-toolchain.AppDir
-          asset_content_type: application/octet-stream
+          name: "v${{ env.APP_VERSION }}"
+          tag_name: "v${{ env.APP_VERSION }}"
+          prerelease: ${{ env.prerelease }}
+          draft: false
+          generate_release_notes: true
+          make_latest: true
+          files: |
+            ${{ github.workspace }}/*.AppBundle*
+        continue-on-error: true
