@@ -54,6 +54,10 @@ jobs:
           echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
           echo "APPBUNDLE_FS=${{ github.event.inputs.appbundle_fs }}" >> $GITHUB_ENV
 
+      - name: Debug - List .local/bin contents
+        run: |
+          ls -la "$GOBIN"
+
       - name: Create AppDir
         run: |
           pelfCreator -m "pkgforge-dev/xplshn" -n "pelf-toolchain" -p "bash file binutils patchelf findutils grep sed coreutils strace" -x "usr/bin/strip usr/bin/strace usr/bin/grep usr/bin/sed usr/bin/find usr/bin/file usr/bin/objcopy usr/bin/bash usr/bin/diff usr/bin/patch usr/bin/patchelf" -j "sqfs" --custom-runtime="$GOBIN/appbundle-runtime" -z
