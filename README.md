@@ -1,3 +1,11 @@
+## Usage: Link the AppBundle like this:
+```
+ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelf-sqfs
+ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelf-dwfs
+ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelfCreator
+# Optionally, add as many tools which are included as you want.
+```
+
 ### The AppBundle in this repo contains the following binaries:
 
 - appbundle-runtime
@@ -18,11 +26,3 @@
 - squashfuse
 - squashfuse_ll
 - unsquashfs
-
-# Usage: Link the AppBundle like this:
-```
-ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelf-sqfs
-ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelf-dwfs
-ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelfCreator
-# Optionally, add as many tools which are included as you want.
-```
