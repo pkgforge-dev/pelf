@@ -94,7 +94,7 @@ jobs:
           prerelease: false
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2.0.8
+        uses: softprops/action-gh-release@v2.2.1
         with:
           name: "v${{ env.APP_VERSION }}"
           tag_name: "v${{ env.APP_VERSION }}"
