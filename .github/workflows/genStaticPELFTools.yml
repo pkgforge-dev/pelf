@@ -92,5 +92,5 @@ jobs:
           generate_release_notes: true
           make_latest: true
           files: |
-            ${{ github.workspace }}/*.AppBundle*
+            ${{ github.workspace }}/dist/*.AppBundle*
         continue-on-error: true
