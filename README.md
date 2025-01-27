@@ -8,21 +8,21 @@ ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelfCreator
 
 ### The AppBundle in this repo contains the following binaries:
 
-- appbundle-runtime
-- appstream-helper
-- busybox
-- find
-- lib4bin
-- mksquashfs
-- pelf-dwfs
-- pelf-dwfs_extract
-- pelf-sqfs
-- pelf-sqfs_extract
-- pelfCreator
-- pelf_linker
-- sharun
-- sqfscat
-- sqfstar
-- squashfuse
-- squashfuse_ll
-- unsquashfs
+- `appbundle-runtime`
+- `appstream-helper`
+- `busybox`
+- `find`
+- `lib4bin`
+- `mksquashfs`
+- `pelf-dwfs`
+- `pelf-dwfs_extract`
+- `pelf-sqfs`
+- `pelf-sqfs_extract`
+- `pelfCreator`
+- `pelf_linker`
+- `sharun`
+- `sqfscat`
+- `sqfstar`
+- `squashfuse`
+- `squashfuse_ll`
+- `unsquashfs`
