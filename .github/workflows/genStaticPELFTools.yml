@@ -54,7 +54,6 @@ jobs:
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
           echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
-          echo "APPBUNDLE_FS=${{ github.event.inputs.appbundle_fs }}" >> $GITHUB_ENV
 
       - name: Create AppDir
         run: |
@@ -74,12 +73,13 @@ jobs:
                 usr/bin/patch
                 usr/bin/patchelf" \
               -e "pelf-dwfs" \
+              -j "sqfs" \
               -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
           "$APPDIR/.gen"
-          mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.dwfs.AppBundle
+          mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
 
       - name: Set version
         run: |
