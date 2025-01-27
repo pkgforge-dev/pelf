@@ -47,6 +47,8 @@ jobs:
           mv ./appbundle-runtime "$GOBIN"
           cd ../../cmd/pfusermount
           ./cbuild.sh
+          strip ./fusermount
+          strip ./fusermount3
           mv ./fusermount ./fusermount3 "$GOBIN/"
           cd
           wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "/usr/local/bin/dbin" add sharun sharun-lib4bin squashfstools/mksquashfs squashfstools/unsquashfs squashfstools/sqfstar squashfstools/sqfscat squashfuse squashfuse_ll dwarfs-tools
