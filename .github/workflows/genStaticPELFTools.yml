@@ -53,7 +53,7 @@ jobs:
           echo "WITH_SHARUN=1" >> $GITHUB_ENV
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
-          #echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
+          echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
           echo "APPBUNDLE_FS=${{ github.event.inputs.appbundle_fs }}" >> $GITHUB_ENV
 
       - name: Create AppDir
