@@ -58,8 +58,7 @@ jobs:
         run: |
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
-          APPBUNDLE_FS="sqfs"
-          pelfCreator -m "pkgforge-dev/xplshn" -n "pelf-toolchain" \
+          pelfCreator -m "pkgforge-dev_xplshn" -n "pelf-toolchain" \
             -p "bash file binutils patchelf findutils grep sed coreutils strace" \
             -x "usr/bin/strip
                 usr/bin/strace
@@ -73,8 +72,7 @@ jobs:
                 usr/bin/patch
                 usr/bin/patchelf" \
               -e "pelf-dwfs" \
-              -j "$APPBUNDLE_FS" --custom-runtime="$GOBIN/appbundle-runtime" \
-              -o "pelf-toolchain.$APPBUNDLE_FS.AppBundle" \
+              -o "pelf-toolchain.dwfs.AppBundle" \
               -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
