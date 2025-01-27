@@ -74,12 +74,12 @@ jobs:
                 usr/bin/patch
                 usr/bin/patchelf" \
               -e "pelf-dwfs" \
-              -o "pelf-toolchain.dwfs.AppBundle" \
               -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
           "$APPDIR/.gen"
+          cp ./pelf-toolchain.*AppBundle pelf-toolchain.dwfs.AppBundle
 
       - name: Set version
         run: |
