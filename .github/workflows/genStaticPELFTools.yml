@@ -74,8 +74,9 @@ jobs:
                 usr/bin/patch
                 usr/bin/patchelf" \
               -e "pelf-dwfs" \
-              --custom-runtime "$DBIN_INSTALL_DIR/appbundle-runtime" \
               -z
+              #--custom-runtime "$DBIN_INSTALL_DIR/appbundle-runtime" \
+              #-z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
