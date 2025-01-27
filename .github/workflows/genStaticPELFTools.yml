@@ -79,7 +79,7 @@ jobs:
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
           "$APPDIR/.gen"
-          cp ./pelf_toolchain.*AppBundle pelf-toolchain.dwfs.AppBundle
+          cp ./pelf-toolchain*.AppBundle pelf-toolchain.dwfs.AppBundle
 
       - name: Set version
         run: |
