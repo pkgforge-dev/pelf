@@ -55,7 +55,7 @@ jobs:
           ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
           ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
           ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfsextract"
-          mv "$DBIN_INSTALL_DIR/bwrap" "$DBIN_INSTALL_DIR/bwrap-patched"
+          mv "$DBIN_INSTALL_DIR/bwrap" "$DBIN_INSTALL_DIR/bwrap-patched" || true
           echo "WITH_SHARUN=1" >> $GITHUB_ENV
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
