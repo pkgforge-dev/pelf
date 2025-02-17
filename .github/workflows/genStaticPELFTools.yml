@@ -51,7 +51,7 @@ jobs:
           #strip ./fusermount3
           #mv ./fusermount ./fusermount3 "$GOBIN/"
           cd
-          wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "/usr/local/bin/dbin" add squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse squashfuse_ll dwarfs-tools
+          wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "/usr/local/bin/dbin" add squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll dwarfs-tools
           ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
           ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
           mv "$DBIN_INSTALL_DIR/sharun-lib4bin" "$DBIN_INSTALL_DIR/lib4bin"
