@@ -53,9 +53,9 @@ jobs:
           #mv ./fusermount ./fusermount3 "$GOBIN/"
           cd
           wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" add dwarfs/dwarfs-tools squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll
-          ln -sf "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
-          ln -sf "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
-          ln -sf "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfsextract"
+          ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
+          ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
+          ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfsextract"
           echo "WITH_SHARUN=1" >> $GITHUB_ENV
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
@@ -63,6 +63,7 @@ jobs:
 
       - name: Create AppDir
         run: |
+          set -x
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
           pelfCreator -m "pkgforge-dev_xplshn" -n "pelf-toolchain" \
@@ -82,6 +83,7 @@ jobs:
               -j "sqfs" \
               -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
+          ls -l $DBIN_INSTALL_DIR/*
           cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
           "$APPDIR/.gen"
