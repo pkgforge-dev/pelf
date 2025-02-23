@@ -61,6 +61,7 @@ jobs:
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
           echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
+          ls -l "$DBIN_INSTALL_DIR"
 
       - name: Set ROOTFS_URL
         run: |
@@ -71,7 +72,7 @@ jobs:
 
       - name: Create AppDir
         run: |
-          ls "$DBIN_INSTALL_DIR"
+          ls -l "$DBIN_INSTALL_DIR"
           set -x
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
