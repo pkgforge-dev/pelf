@@ -71,6 +71,7 @@ jobs:
 
       - name: Create AppDir
         run: |
+          ls "$DBIN_INSTALL_DIR"
           set -x
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
