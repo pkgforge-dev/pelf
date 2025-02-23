@@ -52,7 +52,7 @@ jobs:
           #strip ./fusermount3
           #mv ./fusermount ./fusermount3 "$GOBIN/"
           cd
-          wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" add dwarfs/mkdwarfs dwarfs/dwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll #dwarfs/dwarfs-tools
+          wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" add dwarfs/mkdwarfs dwarfs/dwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs #dwarfs/dwarfs-tools
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfsextract"
@@ -63,7 +63,6 @@ jobs:
 
       - name: Set ROOTFS_URL
         run: |
-          ls -l "$GOBIN"
           ROOTFS_URL="$(curl -qsL https://dl-cdn.alpinelinux.org/alpine/edge/releases/x86_64/latest-releases.yaml | "yq" '.[0].file')"
           ROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/edge/releases/$(uname -m)/${ROOTFS_URL}"
           echo "ROOTFS_URL=$ROOTFS_URL" >> "$GITHUB_ENV"
@@ -91,8 +90,8 @@ jobs:
               -j "sqfs" \
               -z
           APPDIR="$(echo pelf-toolchain*.AppDir)"
-          ls -l $DBIN_INSTALL_DIR/*
-          cp $DBIN_INSTALL_DIR/* "$APPDIR/bin"
+          ls -l "$DBIN_INSTALL_DIR"
+          cp -a $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           # Create the actual AppBundle:
           "$APPDIR/.gen"
           mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
