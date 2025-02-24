@@ -14,17 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    container:
-      image: "alpine:latest"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for tags
 
-      - name: Add non-compliant tools, because sucky software requires sucky software
-        run: |
-          apk add git bash file binutils patchelf findutils grep sed coreutils strace
-          apk add go fuse3 fuse curl yq-go
+      - name: Set up container environment
+        uses: docker://alpine:latest
+        with:
+          entrypoint: /bin/sh
+          args: -c "apk add git bash file binutils patchelf findutils grep sed coreutils strace go fuse3 fuse curl yq-go"
 
       - name: Set up GOBIN and install lib4bin
         run: |
@@ -108,6 +109,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd "$GITHUB_WORKSPACE" 
+          git config --global user.email "xplshn@murena.io"
+          git config --global user.name "xplshn"
           git fetch --tags
           if git tag -l | grep -q "^${{ env.APP_VERSION }}$"; then
             git tag -d "${{ env.APP_VERSION }}"
