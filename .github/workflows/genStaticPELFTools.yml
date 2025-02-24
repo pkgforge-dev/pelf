@@ -103,21 +103,17 @@ jobs:
           name: version
           path: version
 
-      - name: Delete existing release if it exists
+      - name: Update version tag and create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Fetch all tags
           git fetch --tags
-
-          # Check if the tag exists
-          if git rev-parse "${{ env.APP_VERSION }}" >/dev/null 2>&1; then
-            # Delete the tag locally
+          if git tag -l | grep -q "^${{ env.APP_VERSION }}$"; then
             git tag -d "${{ env.APP_VERSION }}"
-
-            # Delete the tag remotely
-            git push origin ":refs/tags/${{ env.APP_VERSION }}"
+            git push origin --delete "${{ env.APP_VERSION }}" || true
           fi
+          git tag "${{ env.APP_VERSION }}"
+          git push origin "${{ env.APP_VERSION }}"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
