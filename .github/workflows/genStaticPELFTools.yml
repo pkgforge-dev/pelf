@@ -107,6 +107,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd "$GITHUB_WORKSPACE" 
           git fetch --tags
           if git tag -l | grep -q "^${{ env.APP_VERSION }}$"; then
             git tag -d "${{ env.APP_VERSION }}"
