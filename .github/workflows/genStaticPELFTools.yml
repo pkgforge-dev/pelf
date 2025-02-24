@@ -72,8 +72,8 @@ jobs:
 
           #- name: Create AppDir
           #run: |
-          ls -l "$DBIN_INSTALL_DIR"
           set -x
+          ls -l "$DBIN_INSTALL_DIR"
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
           pelfCreator -m "pkgforge-dev_xplshn" -n "pelf-toolchain" \
