@@ -32,7 +32,7 @@ jobs:
         run: |
           set -x
           export GOBIN="$GITHUB_WORKSPACE/.local/bin" CGO_ENABLED=0 GO_LDFLAGS='-buildmode=static-pie' GOFLAGS='-ldflags=-static-pie -ldflags=-s -ldflags=-w'
-          export DBIN_INSTALL_DIR="$GOBIN" DBIN_NOCONFIG=1
+          export DBIN_INSTALL_DIR="$GOBIN" DBIN_NOCONFIG=1 PATH="$GOBIN:$PATH"
           mkdir -p "$GOBIN"
           echo "DBIN_INSTALL_DIR=$DBIN_INSTALL_DIR" >> $GITHUB_ENV
           echo "DBIN_NOCONFIG=$DBIN_NOCONFIG" >> $GITHUB_ENV
