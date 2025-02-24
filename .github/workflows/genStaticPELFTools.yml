@@ -111,13 +111,18 @@ jobs:
           cd "$GITHUB_WORKSPACE" 
           git config --global user.email "xplshn@murena.io"
           git config --global user.name "xplshn"
-          git fetch --tags
+          git fetch --all --tags
+          # Get current commit SHA
+          COMMIT_SHA=$(git rev-parse HEAD)
+          # Check if tag exists and delete if necessary
           if git tag -l | grep -q "^${{ env.APP_VERSION }}$"; then
             git tag -d "${{ env.APP_VERSION }}"
-            git push origin --delete "${{ env.APP_VERSION }}" || true
+            git push origin :refs/tags/${{ env.APP_VERSION }} || true
           fi
-          git tag "${{ env.APP_VERSION }}"
-          git push origin "${{ env.APP_VERSION }}"
+          # Create new tag on current commit
+          git tag "${{ env.APP_VERSION }}" $COMMIT_SHA
+          # Push specifically as a tag reference
+          git push origin refs/tags/${{ env.APP_VERSION }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
