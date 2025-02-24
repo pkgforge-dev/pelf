@@ -46,7 +46,7 @@ jobs:
           mv ./appbundle-runtime "$GOBIN"
           cd
           wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" -v
-          DBIN_INSTALL_DIR="$GOBIN" "$DBIN_INSTALL_DIR/dbin" --silent add dwarfs/dwarfs dwarfs/mkdwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs bwrap yq gh
+          DBIN_INSTALL_DIR="$GOBIN" "$DBIN_INSTALL_DIR/dbin" --silent add dwarfs/dwarfs dwarfs/mkdwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs bwrap yq
           echo "WITH_SHARUN=1" >> $GITHUB_ENV
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
@@ -105,10 +105,19 @@ jobs:
 
       - name: Delete existing release if it exists
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd "$GITHUB_WORKSPACE"
-          gh release delete "${{ env.APP_VERSION }}" --yes || true
+          # Fetch all tags
+          git fetch --tags
+
+          # Check if the tag exists
+          if git rev-parse "${{ env.APP_VERSION }}" >/dev/null 2>&1; then
+            # Delete the tag locally
+            git tag -d "${{ env.APP_VERSION }}"
+
+            # Delete the tag remotely
+            git push origin ":refs/tags/${{ env.APP_VERSION }}"
+          fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
