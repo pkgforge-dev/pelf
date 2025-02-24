@@ -37,7 +37,7 @@ jobs:
           echo "DBIN_INSTALL_DIR=$DBIN_INSTALL_DIR" >> $GITHUB_ENV
           echo "DBIN_NOCONFIG=$DBIN_NOCONFIG" >> $GITHUB_ENV
           echo "GOBIN=$GOBIN" >> $GITHUB_ENV
-          echo "PATH=$GOBIN:$PATH" >> $GITHUB_ENV
+          echo "PATH=$PATH" >> $GITHUB_ENV
           git clone --depth 1 --branch dev https://github.com/xplshn/pelf
           cp ./pelf/pelf* "$GOBIN" || true
           cd ./pelf/cmd/misc/appstream_helper
@@ -53,7 +53,7 @@ jobs:
           #mv ./fusermount ./fusermount3 "$GOBIN/"
           cd
           wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" -v
-          "$DBIN_INSTALL_DIR/dbin" --silent add dwarfs/dwarfs dwarfs/mkdwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs bwrap yq #dwarfs/dwarfs-tools
+          DBIN_INSTALL_DIR="$GOBIN" "$DBIN_INSTALL_DIR/dbin" --silent add dwarfs/dwarfs dwarfs/mkdwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs bwrap yq #dwarfs/dwarfs-tools
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfs"
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/mkdwarfs"
           #ln -sfT "$DBIN_INSTALL_DIR/dwarfs-tools" "$DBIN_INSTALL_DIR/dwarfsextract"
