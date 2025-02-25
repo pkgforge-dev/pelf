@@ -88,33 +88,11 @@ jobs:
           name: AppBundle
           path: dist/*.AppBundle*
 
-      - name: Update tag and create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd "$GITHUB_WORKSPACE"
-          git config --global user.email "xplshn@murena.io"
-          git config --global user.name "xplshn"
-          git fetch --all --tags
-          # Get current commit SHA
-          COMMIT_SHA=$(git rev-parse HEAD)
-          # Use the branch name as the tag
-          TAG_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
-          # Check if tag exists and delete if necessary
-          if git tag -l | grep -q "^${TAG_NAME}$"; then
-            git tag -d "${TAG_NAME}"
-            git push origin :refs/tags/${TAG_NAME} || true
-          fi
-          # Create new tag on current commit
-          git tag "${TAG_NAME}" $COMMIT_SHA
-          # Push specifically as a tag reference
-          git push origin refs/tags/${TAG_NAME}
-
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          name: "${{ github.ref_name }}"
-          tag_name: "${{ github.ref_name }}"
+          name: "Latest Build"
+          tag_name: "latest"
           prerelease: false
           draft: false
           generate_release_notes: true
