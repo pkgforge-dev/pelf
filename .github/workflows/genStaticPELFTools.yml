@@ -85,6 +85,7 @@ jobs:
           cp -a $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           "$APPDIR/.gen"
           mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
+          sha256sum ./pelf-toolchain*.AppBundle
 
       - name: Set version
         run: |
