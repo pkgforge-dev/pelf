@@ -45,6 +45,7 @@ jobs:
           go build
           strip ./appbundle-runtime
           mv ./appbundle-runtime "$GOBIN"
+          git show
           cd
           wget -qO- "https://raw.githubusercontent.com/xplshn/dbin/master/stubdl" | sh -s -- --install "$DBIN_INSTALL_DIR/dbin" -v
           DBIN_INSTALL_DIR="$GOBIN" "$DBIN_INSTALL_DIR/dbin" --silent add dwarfs/dwarfs dwarfs/mkdwarfs dwarfs/dwarfsextract squashfs-tools/mksquashfs squashfs-tools/unsquashfs squashfs-tools/sqfstar squashfs-tools/sqfscat squashfuse/squashfuse squashfuse/squashfuse_ll unionfs-fuse3/unionfs bwrap yq
