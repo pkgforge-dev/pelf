@@ -82,50 +82,40 @@ jobs:
           mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
           sha256sum ./pelf-toolchain*.AppBundle
 
-      - name: Set version
-        run: |
-          head -n 1 version
-          export VERSION="$(head -n 1 version)"
-          echo "APP_VERSION=${VERSION}" >> "${GITHUB_ENV}"
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.1
         with:
           name: AppBundle
           path: dist/*.AppBundle*
 
-      - name: Upload version file
-        uses: actions/upload-artifact@v4.6.1
-        with:
-          name: version
-          path: version
-
-      - name: Update version tag and create release
+      - name: Update tag and create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd "$GITHUB_WORKSPACE" 
+          cd "$GITHUB_WORKSPACE"
           git config --global user.email "xplshn@murena.io"
           git config --global user.name "xplshn"
           git fetch --all --tags
           # Get current commit SHA
           COMMIT_SHA=$(git rev-parse HEAD)
+          # Use the branch name as the tag
+          TAG_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           # Check if tag exists and delete if necessary
-          if git tag -l | grep -q "^${{ env.APP_VERSION }}$"; then
-            git tag -d "${{ env.APP_VERSION }}"
-            git push origin :refs/tags/${{ env.APP_VERSION }} || true
+          if git tag -l | grep -q "^${TAG_NAME}$"; then
+            git tag -d "${TAG_NAME}"
+            git push origin :refs/tags/${TAG_NAME} || true
           fi
           # Create new tag on current commit
-          git tag "${{ env.APP_VERSION }}" $COMMIT_SHA
+          git tag "${TAG_NAME}" $COMMIT_SHA
           # Push specifically as a tag reference
-          git push origin refs/tags/${{ env.APP_VERSION }}
+          git push origin refs/tags/${TAG_NAME}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          name: "${{ env.APP_VERSION }}"
-          tag_name: "${{ env.APP_VERSION }}"
-          prerelease: ${{ env.prerelease }}
+          name: "${{ github.ref_name }}"
+          tag_name: "${{ github.ref_name }}"
+          prerelease: false
           draft: false
           generate_release_notes: true
           make_latest: true
