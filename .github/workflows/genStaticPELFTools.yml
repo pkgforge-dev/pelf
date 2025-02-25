@@ -12,7 +12,6 @@ jobs:
   build:
     name: Build tooling
     runs-on: ubuntu-latest
-    permissions: write
     container:
       image: "docker.io/azathothas/appbundler-alpine:latest"
       options: --privileged
@@ -23,14 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up container environment
-        uses: docker://alpine:latest
-        with:
-          entrypoint: /bin/sh
-          args: -c "apk add git bash file binutils patchelf findutils grep sed coreutils strace go fuse3 fuse curl yq-go"
-
       - name: Set up GOBIN and install lib4bin
         run: |
+          apk add git bash file binutils patchelf findutils grep sed coreutils strace go fuse3 fuse curl yq-go
           set -x
           export GOBIN="$GITHUB_WORKSPACE/.local/bin" CGO_ENABLED=0 GO_LDFLAGS='-buildmode=static-pie' GOFLAGS='-ldflags=-static-pie -ldflags=-s -ldflags=-w'
           export DBIN_INSTALL_DIR="$GOBIN" DBIN_NOCONFIG=1 PATH="$GOBIN:$PATH"
