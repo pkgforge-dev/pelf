@@ -24,6 +24,7 @@ ln -sf ~/Downloads/PathToPELF.sqfs.AppBundle ./pelfCreator
 - `sqfscat`
 - `sqfstar`
 - `strace`
+- `strip`
 - `squashfuse`
 - `squashfuse_ll`
 - `unsquashfs`
