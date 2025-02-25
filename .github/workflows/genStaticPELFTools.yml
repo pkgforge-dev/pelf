@@ -12,8 +12,10 @@ jobs:
   build:
     name: Build tooling
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    permissions: write-all
+    container:
+      image: "docker.io/azathothas/appbundler-alpine:latest"
+      options: --privileged
 
     steps:
       - name: Checkout repository
