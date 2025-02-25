@@ -55,7 +55,7 @@ jobs:
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
           echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
           ls -l "$DBIN_INSTALL_DIR"
-          export _VAR_CUSTOM_RUNTIME="$GOBIN/appbundle-runtime
+          export _VAR_CUSTOM_RUNTIME="$GOBIN/appbundle-runtime"
           ROOTFS_URL="$(curl -qsL https://dl-cdn.alpinelinux.org/alpine/edge/releases/x86_64/latest-releases.yaml | "yq" '.[0].file')"
           ROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/edge/releases/$(uname -m)/${ROOTFS_URL}"
           export ROOTFS_URL
