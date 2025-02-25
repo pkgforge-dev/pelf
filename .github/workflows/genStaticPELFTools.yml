@@ -65,7 +65,7 @@ jobs:
           set -x
           mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
-          pelfCreator -m "pkgforge-dev_xplshn" -n "pelf-toolchain" \
+          pelfCreator -m "xplshn" -n "pelf-toolchain" \
             -p "bash file binutils patchelf findutils grep sed coreutils strace" \
             -x "usr/bin/strip
                 usr/bin/strace
