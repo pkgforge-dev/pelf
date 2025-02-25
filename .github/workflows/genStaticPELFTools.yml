@@ -12,7 +12,7 @@ jobs:
   build:
     name: Build tooling
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions: write
     container:
       image: "docker.io/azathothas/appbundler-alpine:latest"
       options: --privileged
