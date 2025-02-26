@@ -52,22 +52,12 @@ jobs:
           ROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/edge/releases/$(uname -m)/${ROOTFS_URL}"
           export ROOTFS_URL
           echo "ROOTFS_URL=$ROOTFS_URL" >> "$GITHUB_ENV"
-          echo "$ROOTFS_URL" > "$GITHUB_WORKSPACE/alpineLinuxEdge.rootfsURL"
-
-      - name: Commit and push rootfs URL
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add alpineLinuxEdge.rootfsURL
-          git commit -m "Update Alpine Linux Edge rootfs URL"
-          git push origin HEAD:${{ github.ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          mkdir "$GITHUB_WORKSPACE/dist"
+          echo "$ROOTFS_URL" > "$GITHUB_WORKSPACE/dist/alpineLinuxEdge.rootfsURL"
 
       - name: Create AppBundle
         run: |
           set -x
-          mkdir "$GITHUB_WORKSPACE/dist"
           cd "$GITHUB_WORKSPACE/dist"
           pelfCreator -m "xplshn" -n "pelf-toolchain" \
             -p "bash file binutils patchelf findutils grep sed coreutils strace" \
@@ -113,4 +103,5 @@ jobs:
           make_latest: true
           files: |
             ${{ github.workspace }}/dist/*.AppBundle*
+            ${{ github.workspace }}/dist/*.rootfsURL
         continue-on-error: true
