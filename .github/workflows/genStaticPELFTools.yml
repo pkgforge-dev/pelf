@@ -53,12 +53,12 @@ jobs:
           export ROOTFS_URL
           echo "ROOTFS_URL=$ROOTFS_URL" >> "$GITHUB_ENV"
           mkdir "$GITHUB_WORKSPACE/dist"
-          echo "$ROOTFS_URL" > "$GITHUB_WORKSPACE/dist/alpineLinuxEdge.rootfsURL"
 
       - name: Create AppBundle
         run: |
           set -x
           cd "$GITHUB_WORKSPACE/dist"
+          echo "$ROOTFS_URL" >"alpineLinuxEdge.rootfsURL"
           pelfCreator -m "xplshn" -n "pelf-toolchain" \
             -p "bash file binutils patchelf findutils grep sed coreutils strace" \
             -x "usr/bin/strip
@@ -80,7 +80,6 @@ jobs:
           cp -a $DBIN_INSTALL_DIR/* "$APPDIR/bin"
           "$APPDIR/.gen"
           mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
-          sha256sum ./pelf-toolchain*.AppBundle
 
           # Calculate b3sum checksum
           B3SUM_CHECKSUM=$(b3sum ./pelf-toolchain*.AppBundle | awk '{print $1}')
@@ -89,7 +88,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.1
         with:
-          name: AppBundle
+          name: AppBundle & 
           path: ${{ github.workspace }}/dist/*
 
       - name: Create Release
@@ -102,6 +101,5 @@ jobs:
           generate_release_notes: true
           make_latest: true
           files: |
-            ${{ github.workspace }}/dist/*.AppBundle*
-            ${{ github.workspace }}/dist/*.rootfsURL
+            ${{ github.workspace }}/dist/*
         continue-on-error: true
