@@ -24,7 +24,7 @@ jobs:
 
       - name: Set up GOBIN and install lib4bin
         run: |
-          apk add git bash file binutils patchelf findutils grep sed coreutils strace go fuse3 fuse curl yq-go
+          apk add git bash file binutils patchelf findutils grep sed coreutils strace go fuse3 fuse curl yq-go b3sum
           set -x
           export GOBIN="$GITHUB_WORKSPACE/.local/bin" CGO_ENABLED=0 GO_LDFLAGS='-buildmode=static-pie' GOFLAGS='-ldflags=-static-pie -ldflags=-s -ldflags=-w'
           export DBIN_INSTALL_DIR="$GOBIN" DBIN_NOCONFIG=1 PATH="$GOBIN:$PATH"
@@ -47,9 +47,8 @@ jobs:
           echo "WITH_SHARUN=1" >> $GITHUB_ENV
           echo "GEN_LIB_PATH=1" >> $GITHUB_ENV
           echo "ANY_EXECUTABLE=1" >> $GITHUB_ENV
-          echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
+          #echo "_VAR_CUSTOM_RUNTIME=$GOBIN/appbundle-runtime" >> $GITHUB_ENV
           ls -l "$DBIN_INSTALL_DIR"
-          #export _VAR_CUSTOM_RUNTIME="$GOBIN/appbundle-runtime"
           ROOTFS_URL="$(curl -qsL https://dl-cdn.alpinelinux.org/alpine/edge/releases/x86_64/latest-releases.yaml | "yq" '.[0].file')"
           ROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/edge/releases/$(uname -m)/${ROOTFS_URL}"
           export ROOTFS_URL
@@ -82,6 +81,10 @@ jobs:
           mv ./pelf-toolchain*.AppBundle ./pelf-toolchain.sqfs.AppBundle
           sha256sum ./pelf-toolchain*.AppBundle
 
+          # Calculate b3sum checksum
+          B3SUM_CHECKSUM=$(b3sum ./pelf-toolchain*.AppBundle | awk '{print $1}')
+          echo "B3SUM_CHECKSUM=$B3SUM_CHECKSUM" >> $GITHUB_ENV
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.1
         with:
@@ -92,7 +95,7 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           name: "Latest Build"
-          tag_name: "latest"
+          tag_name: "${{ env.B3SUM_CHECKSUM }}"
           prerelease: false
           draft: false
           generate_release_notes: true
