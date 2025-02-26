@@ -90,9 +90,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.1
         with:
           name: AppBundle
-          files: |
-            ${{ github.workspace }}/dist/*.AppBundle*
-            ${{ github.workspace }}/dist/*.rootfsURL
+          path: ${{ github.workspace }}/dist/*
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
